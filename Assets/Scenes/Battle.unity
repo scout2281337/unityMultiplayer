@@ -225,7 +225,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2482351494721072725, guid: 30a819433baca9f448367445d5a28f72, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -299.99933
+      value: -65.712204
       objectReference: {fileID: 0}
     - target: {fileID: 4788715257458800077, guid: 30a819433baca9f448367445d5a28f72, type: 3}
       propertyPath: m_AnchorMax.x
@@ -547,6 +547,7 @@ GameObject:
   - component: {fileID: 438582925}
   - component: {fileID: 438582924}
   - component: {fileID: 438582923}
+  - component: {fileID: 438582926}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -600,7 +601,7 @@ MonoBehaviour:
   NetworkConfig:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 438582923}
-    PlayerPrefab: {fileID: 0}
+    PlayerPrefab: {fileID: 3639640733500050094, guid: 8eaa1c09949787f4183cc45272c06615, type: 3}
     Prefabs:
       NetworkPrefabsLists:
       - {fileID: 11400000, guid: e06ecd67cf8cf504aa664410424d61fc, type: 2}
@@ -641,6 +642,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &438582926
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 438582922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2474fd83a24339142b10a67f2c98b4dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HelloWorld.HelloWorldManager
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -706,7 +719,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1035780933
 MonoBehaviour:
   m_ObjectHideFlags: 0
