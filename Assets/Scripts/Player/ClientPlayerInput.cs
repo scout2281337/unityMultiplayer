@@ -1,3 +1,4 @@
+using Unity.Netcode;
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
@@ -5,13 +6,21 @@ using UnityEngine.InputSystem;
 
 namespace Triwoinmag
 {
-	public class ClientPlayerInput : MonoBehaviour
+	public class ClientPlayerInput : NetworkBehaviour
 	{
 		[Header("Character Input Values")]
 		public Vector2 move;
 		public Vector2 look;
-		public bool jump;
-		public bool sprint;
+        [SerializeField]private bool jump;
+        public bool Jump { 
+			get { return jump; }
+			set { 
+				jump = value;
+				if (IsOwner)
+					NetVarJump.Value = value;
+			}
+		}
+        public bool sprint;
 
 		[Header("Movement Settings")]
 		public bool analogMovement;
@@ -20,8 +29,30 @@ namespace Triwoinmag
 		public bool cursorLocked = true;
 		public bool cursorInputForLook = true;
 
+
+        [Header("Refs")]
+        [SerializeField]private PlayerInput _playerInput;
+        
+		
+		//NetVars
+		public NetworkVariable<bool> NetVarJump = new NetworkVariable<bool>(false, 
+			NetworkVariableReadPermission.Everyone, 
+			NetworkVariableWritePermission.Owner);
+		
+		public override void OnNetworkSpawn()
+        {
+            if (!IsOwner)
+            {
+                return;
+            }
+			_playerInput.enabled = true;
+        }
+
+
+
+
 #if ENABLE_INPUT_SYSTEM
-		public void OnMove(InputValue value)
+        public void OnMove(InputValue value)
 		{
 			MoveInput(value.Get<Vector2>());
 		}
@@ -58,7 +89,7 @@ namespace Triwoinmag
 
 		public void JumpInput(bool newJumpState)
 		{
-			jump = newJumpState;
+            Jump = newJumpState;
 		}
 
 		public void SprintInput(bool newSprintState)

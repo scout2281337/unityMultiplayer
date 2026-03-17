@@ -126,6 +126,10 @@ namespace Triwoinmag
         }
 
 
+        //NetVars
+        NetworkVariable<float> _netVarAnimationBlend = new NetworkVariable<float>(0f,NetworkVariableReadPermission.Everyone,NetworkVariableWritePermission.Owner);
+        NetworkVariable<float> _netVarInputMagnitude = new NetworkVariable<float>(0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
         private void Awake()
         {
             // get a reference to our main camera
@@ -229,6 +233,20 @@ namespace Triwoinmag
 
         private void Move()
         {
+            
+            
+            if (!IsOwner) 
+            {
+
+
+                if (_hasAnimator)
+                {
+                    _animator.SetFloat(_animIDSpeed, _netVarAnimationBlend.Value);
+                    _animator.SetFloat(_animIDMotionSpeed, _netVarInputMagnitude.Value);
+                }
+
+                return;
+            }
             // set target speed based on move speed, sprint speed and if sprint is pressed
             float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
 
@@ -293,10 +311,32 @@ namespace Triwoinmag
                 _animator.SetFloat(_animIDSpeed, _animationBlend);
                 _animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
             }
+
+            _netVarAnimationBlend.Value = _animationBlend;
+            _netVarInputMagnitude.Value = inputMagnitude; 
+            
         }
 
         private void JumpAndGravity()
         {
+            if (!IsOwner) 
+            {
+
+                if (_hasAnimator)
+                {
+                    _animator.SetBool(_animIDJump, _input.NetVarJump.Value);
+                }
+
+
+                
+                _animator.SetBool(_animIDFreeFall, !Grounded);
+                
+             
+                
+                return;
+            }
+            
+            
             if (Grounded)
             {
                 // reset the fall timeout timer
@@ -316,7 +356,7 @@ namespace Triwoinmag
                 }
 
                 // Jump
-                if (_input.jump && _jumpTimeoutDelta <= 0.0f)
+                if (_input.Jump && _jumpTimeoutDelta <= 0.0f)
                 {
                     // the square root of H * -2 * G = how much velocity needed to reach desired height
                     _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
@@ -354,7 +394,7 @@ namespace Triwoinmag
                 }
 
                 // if we are not grounded, do not jump
-                _input.jump = false;
+                _input.Jump = false;
             }
 
             // apply gravity over time if under terminal (multiply by delta time twice to linearly speed up over time)
