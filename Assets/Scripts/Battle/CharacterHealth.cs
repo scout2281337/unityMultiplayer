@@ -1,8 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using Unity.Netcode;
 
-public class CharacterHealth : MonoBehaviour, IDamageable {
+public class CharacterHealth : NetworkBehaviour, IDamageable {
 	[SerializeField] private bool Debugging;
 
     [SerializeField] private float _health = 100;
@@ -24,7 +23,9 @@ public class CharacterHealth : MonoBehaviour, IDamageable {
 
         if (_health <= 0) {
 	        Instantiate(ExplosionPrefab, transform.position, Quaternion.identity);
-	        Destroy(gameObject);
+
+            if (IsServer)
+	            Destroy(gameObject);
         }
     }
 

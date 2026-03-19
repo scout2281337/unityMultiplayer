@@ -1,11 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 
 namespace Triwoinmag {
-	public class CharacterWeapons : MonoBehaviour {
+	public class CharacterWeapons : NetworkBehaviour {
 		public CharacterCore Core;
 
 		public List<IWeapon> Weapons = new List<IWeapon>();
@@ -25,9 +24,11 @@ namespace Triwoinmag {
 		}
 
 		private void Update() {
-			if (Input.GetMouseButtonDown(0)) {
-				FireWeapons();
-			}
+			if (IsOwner)
+            {
+                if (Input.GetMouseButtonDown(0))
+                    FireWeapons();
+            }
 		}
 
 		public void FireWeapons() {

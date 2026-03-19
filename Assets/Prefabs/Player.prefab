@@ -1491,6 +1491,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba366a3b0489d33479de6cdb89a1f169, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Triwoinmag.CharacterWeapons
+  ShowTopMostFoldoutHeaderGroup: 1
   Core: {fileID: 5855113642094662172}
   <SelectedWeaponId>k__BackingField: 0
   MaxDistanceToTarget: 250
@@ -1669,7 +1670,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3101186
+  GlobalObjectIdHash: 659498454
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1

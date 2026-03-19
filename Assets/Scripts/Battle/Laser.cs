@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Triwoinmag {
     [RequireComponent(typeof(LineRenderer))]
-    public class Laser : MonoBehaviour, IWeapon {
+    public class Laser : NetworkBehaviour, IWeapon {
 	    [field: SerializeField] public float DamageAmount { get; private set; } = 50.0f;
 	    [field: SerializeField] public float MaxDistance { get; private set; } = 100.0f;
 
@@ -63,11 +63,21 @@ namespace Triwoinmag {
 	        _lineRenderer.material.SetTextureOffset("_MainTex", new Vector2(_lineRenAnimDeltaTime * _lineRenAnimSpeed, 0f)); //_BaseMap
         }
 
+        public void Attack(Vector3 targetPosition)
+        {
+            if (!IsOwner) return;
 
-        public void Attack(Vector3 targetPosition) {
+            AttackServerRpc(targetPosition);
+            VisualizeFiring(targetPosition);
+        }
+
+        [ServerRpc]
+        public void AttackServerRpc(Vector3 targetPosition) {
 	        if (!CanFire) { return; }
 
-	        RaycastHit hitInfo;
+            VisualizeFiringClientRpc(targetPosition);
+
+            RaycastHit hitInfo;
             var direction = (targetPosition - transform.position).normalized;
             if (Physics.Raycast(transform.position, direction, out hitInfo, MaxDistance, _layerMask)) {
 	            if (Debugging) {
@@ -83,12 +93,8 @@ namespace Triwoinmag {
                     TargetsHit.Add(damageableHit);
                     Damage(DamageAmount, targetHit.position, _characterWeapons.Core.Agent);
                 }
-                VisualizeFiring(targetPosition);
                 return;
             }
-
-            //If nothing was hit
-            VisualizeFiring(transform.position + direction.normalized * MaxDistance);
         }
         
         public void Damage(float damageAmount, Vector3 targetHitPosition, GameAgent sender) {
@@ -96,6 +102,14 @@ namespace Triwoinmag {
                 targetHit.ReceiveDamage(damageAmount, targetHitPosition, sender);
             }
             TargetsHit.Clear();
+        }
+
+        [ClientRpc]
+        public void VisualizeFiringClientRpc(Vector3 targetPosition)
+        {
+            if (IsOwner) return;
+
+            VisualizeFiring(targetPosition);
         }
 
         public void VisualizeFiring(Vector3 targetPosition) {
